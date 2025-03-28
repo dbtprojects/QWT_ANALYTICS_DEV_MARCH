@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "{{ doc('customers') }}"
+    columns:
+      - name: customerid
+        description: "{{ doc('customerid') }}"
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_shipments
+    description: shiments flow for the items ordered by customers
+    columns:
+      - name: status
+        description: status represent actual status for the ordered item
+        tests:
+          - accepted_values:
+              values: ["shipped", "ordered", "returned", "replaced"]
+
+  - name: stg_orderdetails
+    description: transaction captured in source system for the items ordered by customers
+    columns:
+      - name: orderid
+        description: each order represents uniquely by the priamry key of the transaction table
+        tests:
+          - relationships:
+              field: orderid
+              to: ref('stg_orders')
+
